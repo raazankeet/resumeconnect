@@ -1,0 +1,53 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+*.egg
+*.log
+
+# Virtual environment
+.env
+.venv/
+env/
+venv/
+ENV/
+
+# Environment & secrets
+*.env
+.env.*
+# Explicitly ignore your dotenv file
+.env.local
+.env.development
+.env.production
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# IDEs/editors
+.vscode/
+.idea/
+*.swp
+
+# Build & cache
+.cache/
+dist/
+build/
+
+# Gradio / runtime artifacts
+gradio_cached_examples/
+*.db
+*.sqlite3
+
+# Local files you don't want in git
+Ankit-Resume.pdf
+linkedinlogo.png
+
+# Any other personal assets
+*.pdf
+*.png
+*.jpg
+*.jpeg
+*.ico
