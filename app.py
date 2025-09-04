@@ -9,9 +9,8 @@ from langchain_google_genai import GoogleGenerativeAIEmbeddings
 # ========================
 # 🔑 Configurable Variables
 # ========================
-RESUME_PATH = r"Ankit-Resume.pdf"   # local file path
+RESUME_PATH = r"Ankit-Raj-Resume.pdf"   # local file path
 LINKEDIN_URL = "https://www.linkedin.com/in/raazankeet/"
-LINKEDIN_LOGO = r"linkedinlogo.png"        # local PNG file
 GITHUB_URL="https://github.com/raazankeet" # GitHub URL
 EMAIL="raazankeet@gmail.com"               # Email address
 
@@ -43,8 +42,38 @@ markdown_content = """
 </div>
 """
 
-# Compact sidebar with smaller fonts and diverse pill colors
-SIDEBAR_HTML = f"""
+# Compact sidebar with integrated download button
+def create_sidebar_html():
+    # Check if resume file exists for download button
+    download_button_html = ""
+    if os.path.exists(RESUME_PATH):
+        # Create a download link that works in HTML
+        download_button_html = f"""
+        <div style="margin-bottom: 0.8rem;">
+            <a href="data:application/pdf;base64,{get_resume_base64()}" 
+               download="Ankit-Raj-Resume.pdf" 
+               style="display: block; text-decoration: none; width: 100%;">
+                <button style="background: linear-gradient(135deg, #1e40af, #3730a3); 
+                               color: #ffffff; font-weight: 600; padding: 0.6rem; 
+                               border-radius: 8px; border: none; font-size: 0.8rem; 
+                               width: 100%; cursor: pointer; 
+                               transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);"
+                        onmouseover="this.style.background='linear-gradient(135deg, #1d4ed8, #4338ca)'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 14px rgba(30, 64, 175, 0.4)';"
+                        onmouseout="this.style.background='linear-gradient(135deg, #1e40af, #3730a3)'; this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+                    📄 Download Resume
+                </button>
+            </a>
+        </div>
+        """
+    else:
+        download_button_html = f"""
+        <div style="text-align: center; padding: 0.6rem; background: #fca5a5; color: #991b1b; 
+                    border-radius: 8px; font-size: 0.8rem; margin-bottom: 0.8rem;">
+            Resume file not found
+        </div>
+        """
+    
+    return f"""
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
@@ -208,63 +237,6 @@ SIDEBAR_HTML = f"""
     margin-bottom: 0.4rem;
     display: block;
   }}
-  
-  /* Compact download button */
-  .download-btn {{
-    display: block;
-    width: 100%;
-    text-align: center;
-    background: linear-gradient(135deg, #1e40af, #3730a3);
-    color: #ffffff !important;
-    font-weight: 600;
-    padding: 0.6rem;
-    border-radius: 8px;
-    text-decoration: none;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    margin-bottom: 0.8rem;
-    font-size: 0.8rem;
-    border: none;
-    text-shadow: 0 1px 2px rgba(0,0,0,0.1);
-    position: relative;
-    overflow: hidden;
-  }}
-
-  a.download-btn,
-  a.download-btn:visited,
-  a.download-btn:hover,
-  a.download-btn:active {{
-    text-decoration: none !important;
-  }}
-  
-  .download-btn::before {{
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-    transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  }}
-  
-  .download-btn:hover::before {{
-    left: 100%;
-  }}
-  
-  .download-btn:hover {{
-    background: linear-gradient(135deg, #1d4ed8, #4338ca);
-    color: #ffffff !important;
-    text-decoration: none;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 14px rgba(30, 64, 175, 0.4);
-    filter: brightness(1.05);
-  }}
-  
-  .download-btn:active {{
-    transform: translateY(0);
-    transition: all 0.1s cubic-bezier(0.4, 0, 0.2, 1);
-  }}
-
     
   .section-divider {{
     height: 2px;
@@ -301,10 +273,8 @@ SIDEBAR_HTML = f"""
       <p style="margin: 0.3rem 0 0 0; font-size: 0.75rem; color: #4b5563; font-weight: 500;">Cloud & AI Enthusiast</p>
     </div>
 
-    <!-- Compact Download Resume Button -->
-    <a href="{RESUME_PATH}" download class="download-btn">
-      📄 Download Resume
-    </a>
+    <!-- Download Resume Button - Now integrated -->
+    {download_button_html}
 
     <!-- Compact Connect Section -->
     <div style="margin-bottom: 0.8rem;">
@@ -336,12 +306,14 @@ SIDEBAR_HTML = f"""
         <span class="skill-pill skill-green">Data Governance</span>
         <span class="skill-pill skill-cyan">Data Fabric</span>
         <span class="skill-pill skill-red">Data Obfuscation</span>
+        <span class="skill-pill skill-emerald">API Design</span>
+        <span class="skill-pill skill-violet">Informatica Cloud</span>
         
         <span class="skill-pill skill-indigo">Architecture Reviews</span>  
         <span class="skill-pill skill-orange">Agentic AI</span>
         <span class="skill-pill skill-pink">Chat Bots</span>
-        <span class="skill-pill skill-emerald">API Design</span>
-        <span class="skill-pill skill-violet">Informatica Cloud</span>
+        
+   
         <span class="skill-pill skill-rose">Vector DB</span>
       </div>
     </div>
@@ -368,6 +340,15 @@ SIDEBAR_HTML = f"""
   </div>
 </div>
 """
+
+# Function to convert resume to base64 for download
+def get_resume_base64():
+    import base64
+    try:
+        with open(RESUME_PATH, "rb") as f:
+            return base64.b64encode(f.read()).decode()
+    except:
+        return ""
 
 # Load environment variables
 load_dotenv()
@@ -459,7 +440,7 @@ Question: {message}
 assistant = PersonalAssistant(resume_path=RESUME_PATH, linkedin_url=LINKEDIN_URL)
 
 # ========================
-# MINIMAL CSS - Only fix top gap and basic alignment
+# ENHANCED CSS - Improved example questions styling
 # ========================
 custom_css = """
 /* Remove top gap only */
@@ -491,22 +472,98 @@ footer { visibility: hidden !important; }
     color: #111827 !important;
 }
 
-/* Example buttons */
+/* Enhanced example questions styling - Card-like with pill shapes */
+.gr-examples {
+    background: #ffffff !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 12px !important;
+    padding: 1rem !important;
+    margin-top: 0.5rem !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06) !important;
+}
+
 .gr-examples .gr-button {
-    background: #AEC9FF !important;
+    background: linear-gradient(135deg, #f8fafc, #f1f5f9) !important;
     color: #374151 !important;
     border: 1px solid #d1d5db !important;
     font-weight: 500 !important;
-    padding: 0.4rem 0.6rem !important;
-    font-size: 0.8rem !important;
-    border-radius: 20px !important;
+    padding: 0.65rem 1rem !important;
+    font-size: 0.85rem !important;
+    border-radius: 25px !important;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05) !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    position: relative !important;
+    overflow: hidden !important;
+    line-height: 1.4 !important;
+    text-align: center !important;
+    margin: 0.25rem !important;
+    min-height: 44px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+.gr-examples .gr-button::before {
+    content: '' !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: -100% !important;
+    width: 100% !important;
+    height: 100% !important;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent) !important;
+    transition: left 0.6s ease !important;
 }
 
 .gr-examples .gr-button:hover {
-    background: #e5e7eb !important;
-    color: #111827 !important;
-    border-color: #9ca3af !important;
-    transform: translateY(-1px) scale(1.02) !important;
+    background: linear-gradient(135deg, #1e40af, #3730a3) !important;
+    color: #ffffff !important;
+    border-color: #1e40af !important;
+    transform: translateY(-2px) scale(1.02) !important;
+    box-shadow: 0 6px 16px rgba(30, 64, 175, 0.25) !important;
+}
+
+.gr-examples .gr-button:hover::before {
+    left: 100% !important;
+}
+
+.gr-examples .gr-button:active {
+    transform: translateY(-1px) scale(1.01) !important;
+    transition: all 0.1s ease !important;
+}
+
+/* Add subtle animation to example questions container */
+.gr-examples {
+    animation: slideInUp 0.6s ease-out !important;
+}
+
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Improve the examples grid layout */
+.gr-examples > div {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)) !important;
+    gap: 0.5rem !important;
+    align-items: stretch !important;
+}
+
+/* Add a subtle title to examples section */
+.gr-examples::before {
+    content: "✨ Try these conversation starters:" !important;
+    display: block !important;
+    font-size: 0.9rem !important;
+    font-weight: 600 !important;
+    color: #4b5563 !important;
+    margin-bottom: 0.75rem !important;
+    text-align: center !important;
 }
 
 /* Sidebar styling */
@@ -515,6 +572,33 @@ footer { visibility: hidden !important; }
     padding: 1.2rem !important;
     border-radius: 12px !important;
     border-left: 2px solid #d1d5db !important;
+}
+
+/* Improved textbox styling */
+.gr-textbox {
+    border: 2px solid #e2e8f0 !important;
+    border-radius: 25px !important;
+    transition: all 0.3s ease !important;
+    font-size: 0.95rem !important;
+    padding: 0.75rem 1rem !important;
+}
+
+.gr-textbox:focus {
+    border-color: #1e40af !important;
+    box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.1) !important;
+    outline: none !important;
+}
+
+/* Responsive improvements */
+@media (max-width: 768px) {
+    .gr-examples > div {
+        grid-template-columns: 1fr !important;
+    }
+    
+    .gr-examples .gr-button {
+        font-size: 0.8rem !important;
+        padding: 0.6rem 0.8rem !important;
+    }
 }
 """
 
@@ -561,9 +645,10 @@ with gr.Blocks(
                 ]
             )
 
-        # Wider sidebar
+        # Wider sidebar with integrated download button
         with gr.Column(scale=2, min_width=350):
-            gr.HTML(SIDEBAR_HTML)
+            # The download button is now integrated into the HTML
+            gr.HTML(create_sidebar_html())
 
 # Launch with enhanced configuration
 import os
