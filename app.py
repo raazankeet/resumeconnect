@@ -566,10 +566,22 @@ with gr.Blocks(
             gr.HTML(SIDEBAR_HTML)
 
 # Launch with enhanced configuration
+import os
+
 if __name__ == "__main__":
+    # Azure Web Apps typically use port 8000, but check multiple env vars
+    port = int(os.getenv("PORT") or os.getenv("WEBSITES_PORT") or 8000)
+    
+    # Always bind to 0.0.0.0 for containerized deployments
+    server_name = "0.0.0.0"
+    
+    print(f"Starting server on {server_name}:{port}")
+    print(f"Environment PORT: {os.getenv('PORT')}")
+    print(f"Environment WEBSITES_PORT: {os.getenv('WEBSITES_PORT')}")
+    
     demo.launch(
         share=False,
-        server_port=9876,
-        favicon_path=None,
-        ssl_verify=False
+        server_name=server_name,
+        server_port=port,
+        show_error=True  # This will help with debugging
     )
