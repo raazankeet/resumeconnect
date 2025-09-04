@@ -1,53 +1,154 @@
+# ========================
 # Python
+# ========================
 __pycache__/
-*.pyc
-*.pyo
-*.pyd
-*.egg-info/
-*.egg
+*.py[cod]
+*$py.class
+*.so
 *.log
 
-# Virtual environment
+# ========================
+# Virtual environments
+# ========================
 .env
 .venv/
 env/
 venv/
 ENV/
+env.bak/
+venv.bak/
+.pdm-python
+.pdm-build/
+.pixi
 
+# ========================
 # Environment & secrets
+# ========================
 *.env
 .env.*
-# Explicitly ignore your dotenv file
 .env.local
 .env.development
 .env.production
+.envrc
 
+# ========================
 # OS-specific
+# ========================
 .DS_Store
 Thumbs.db
 
-# IDEs/editors
+# ========================
+# IDEs / Editors
+# ========================
 .vscode/
 .idea/
 *.swp
+.spyderproject
+.spyproject
+.ropeproject
 
-# Build & cache
-.cache/
-dist/
+# ========================
+# Build & packaging
+# ========================
+.Python
 build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
 
-# Gradio / runtime artifacts
-gradio_cached_examples/
+# PyInstaller
+*.manifest
+*.spec
+
+# ========================
+# Testing / Coverage
+# ========================
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py.cover
+.hypothesis/
+.pytest_cache/
+cover/
+
+# ========================
+# Databases / Runtime
+# ========================
 *.db
 *.sqlite3
+*.sqlite3-journal
+celerybeat-schedule
+celerybeat.pid
 
-# Local files you don't want in git
+# ========================
+# Docs
+# ========================
+docs/_build/
+site/
+
+# ========================
+# Type Checkers
+# ========================
+.mypy_cache/
+.dmypy.json
+dmypy.json
+.pyre/
+.pytype/
+cython_debug/
+.ruff_cache/
+
+# ========================
+# Framework-specific
+# ========================
+instance/              # Flask
+.webassets-cache
+.scrapy/               # Scrapy
+local_settings.py      # Django
+
+# ========================
+# Jupyter / IPython
+# ========================
+.ipynb_checkpoints
+profile_default/
+ipython_config.py
+
+# ========================
+# Personal / Assets
+# ========================
 Ankit-Resume.pdf
 linkedinlogo.png
-
-# Any other personal assets
 *.pdf
 *.png
 *.jpg
 *.jpeg
 *.ico
+
+# ========================
+# Tool-specific
+# ========================
+.pypirc
+.abstra/
+.cursorignore
+.cursorindexingignore
+marimo/_static/
+marimo/_lsp/
+__marimo__/
