@@ -15,6 +15,12 @@ LINKEDIN_LOGO = r"linkedinlogo.png"        # local PNG file
 GITHUB_URL="https://github.com/raazankeet" # GitHub URL
 EMAIL="raazankeet@gmail.com"               # Email address
 
+
+if os.getenv("ENVIRONMENT") != "production":
+    from dotenv import load_dotenv
+    load_dotenv()
+
+
 # Compact professional header with reduced margin
 markdown_content = """
 <div style="background: linear-gradient(90deg, #1e40af 0%, #3730a3 100%); 

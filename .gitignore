@@ -152,3 +152,6 @@ linkedinlogo.png
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+
+get_requirements.py
