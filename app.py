@@ -9,10 +9,11 @@ from langchain_google_genai import GoogleGenerativeAIEmbeddings
 # ========================
 # 🔑 Configurable Variables
 # ========================
-RESUME_PATH = r"Ankit-Raj-Resume.pdf"   # local file path
+RESUME_PATH = r"static/Ankit-Raj-Resume.pdf"   # local file path
 LINKEDIN_URL = "https://www.linkedin.com/in/raazankeet/"
 GITHUB_URL="https://github.com/raazankeet" # GitHub URL
 EMAIL="raazankeet@gmail.com"               # Email address
+AVATAR_PATH = "static/avatar.png"  # Add your avatar image path here
 
 
 if os.getenv("ENVIRONMENT") != "production":
@@ -42,25 +43,31 @@ markdown_content = """
 </div>
 """
 
-# Compact sidebar with integrated download button
+# Compact sidebar with integrated download button and avatar
 def create_sidebar_html():
     # Check if resume file exists for download button
     download_button_html = ""
     if os.path.exists(RESUME_PATH):
-        # Create a download link that works in HTML
+        # Create a download link that works in HTML with PDF icon
         download_button_html = f"""
-        <div style="margin-bottom: 0.8rem;">
+        <div style="margin-bottom: 0.6rem; display: flex; justify-content: center;">
             <a href="data:application/pdf;base64,{get_resume_base64()}" 
                download="Ankit-Raj-Resume.pdf" 
-               style="display: block; text-decoration: none; width: 100%;">
-                <button style="background: linear-gradient(135deg, #1e40af, #3730a3); 
-                               color: #ffffff; font-weight: 600; padding: 0.6rem; 
-                               border-radius: 8px; border: none; font-size: 0.8rem; 
-                               width: 100%; cursor: pointer; 
-                               transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);"
-                        onmouseover="this.style.background='linear-gradient(135deg, #1d4ed8, #4338ca)'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 14px rgba(30, 64, 175, 0.4)';"
-                        onmouseout="this.style.background='linear-gradient(135deg, #1e40af, #3730a3)'; this.style.transform='translateY(0)'; this.style.boxShadow='none';">
-                    📄 Download Resume
+               style="text-decoration: none; width: 75%;">
+                <button style="background: linear-gradient(135deg, #6366f1, #8b5cf6, #d946ef); 
+                               color: #ffffff; font-weight: 600; padding: 0.6rem 0.6rem; 
+                               border-radius: 10px; border: none; font-size: 0.8rem; 
+                               width: 100%; cursor: pointer; display: flex; align-items: center; 
+                               justify-content: center; gap: 0.5rem;
+                               transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                               box-shadow: 0 3px 10px rgba(99, 102, 241, 0.3);
+                               position: relative; overflow: hidden;"
+                        onmouseover="this.style.background='linear-gradient(135deg, #7c3aed, #a855f7, #ec4899)'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(124, 58, 237, 0.4)';"
+                        onmouseout="this.style.background='linear-gradient(135deg, #6366f1, #8b5cf6, #d946ef)'; this.style.transform='translateY(0)'; this.style.boxShadow='0 3px 10px rgba(99, 102, 241, 0.3)';">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+                    </svg>
+                    Download Resume
                 </button>
             </a>
         </div>
@@ -68,8 +75,47 @@ def create_sidebar_html():
     else:
         download_button_html = f"""
         <div style="text-align: center; padding: 0.6rem; background: #fca5a5; color: #991b1b; 
-                    border-radius: 8px; font-size: 0.8rem; margin-bottom: 0.8rem;">
+                    border-radius: 10px; font-size: 0.8rem; margin-bottom: 0.6rem;">
             Resume file not found
+        </div>
+        """
+    
+    # Avatar handling - check if avatar exists with smaller green dot
+    avatar_html = ""
+    if os.path.exists(AVATAR_PATH):
+        avatar_base64 = get_avatar_base64()
+        avatar_html = f"""
+        <div style="text-align: center; margin-bottom: 0.4rem;">
+            <div style="position: relative; display: inline-block;">
+                <img src="data:image/jpeg;base64,{avatar_base64}" 
+                     alt="Ankit Raj" 
+                     style="width: 70px; height: 70px; border-radius: 50%; 
+                            border: 3px solid #10b981; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
+                            object-fit: cover;">
+                <div style="position: absolute; bottom: 2px; right: 2px; 
+                           width: 12px; height: 12px; background: #10b981; 
+                           border: 2px solid white; border-radius: 50%;
+                           box-shadow: 0 2px 4px rgba(0,0,0,0.1);"></div>
+            </div>
+        </div>
+        """
+    else:
+        # Fallback avatar with initials and smaller green dot
+        avatar_html = """
+        <div style="text-align: center; margin-bottom: 0.4rem;">
+            <div style="position: relative; display: inline-block;">
+                <div style="width: 70px; height: 70px; border-radius: 50%; 
+                           background: linear-gradient(135deg, #10b981, #059669); 
+                           display: flex; align-items: center; justify-content: center;
+                           color: white; font-weight: 700; font-size: 1.4rem;
+                           border: 3px solid #10b981; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);">
+                    AR
+                </div>
+                <div style="position: absolute; bottom: 2px; right: 2px; 
+                           width: 12px; height: 12px; background: #10b981; 
+                           border: 2px solid white; border-radius: 50%;
+                           box-shadow: 0 2px 4px rgba(0,0,0,0.1);"></div>
+            </div>
         </div>
         """
     
@@ -85,43 +131,48 @@ def create_sidebar_html():
     align-self: flex-start;
     max-width: 100%;
     height: fit-content;
+    max-height: 80vh;
+    overflow: visible;
   }}
 
   .professional-card {{
-    background: #B8BFC4;
-    border: 1px solid #d1d5db;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-    border-radius: 10px;
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 50%, #e2e8f0 100%);
+    border: 1px solid #cbd5e1;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.1);
+    border-radius: 16px;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    backdrop-filter: blur(10px);
   }}
   
   .professional-card:hover {{
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
-    transform: translateY(-1px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12), 0 4px 10px rgba(0, 0, 0, 0.08);
+    transform: translateY(-2px);
   }}
   
-  /* Compact skill pills with diverse colors */
+  /* Ultra compact skill pills with diverse color schemes */
   .skills-container {{
     display: flex;
     flex-wrap: wrap;
-    gap: 0.35rem;
+    gap: 0.2rem;
     align-items: flex-start;
   }}
   
   .skill-pill {{
-    padding: 0.25rem 0.6rem;
-    font-size: 0.65rem;
-    border-radius: 20px;
-    font-weight: 600;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.6rem;
+    border-radius: 14px;
+    font-weight: 700;
     transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
     cursor: pointer;
     white-space: nowrap;
-    line-height: 1.2;
+    line-height: 1.3;
     color: #ffffff !important;
-    text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    text-shadow: 0 1px 2px rgba(0,0,0,0.2);
     position: relative;
     overflow: hidden;
     transform: translateZ(0);
+    letter-spacing: 0.02em;
+    border: 1px solid rgba(255,255,255,0.2);
   }}
   
   .skill-pill::before {{
@@ -131,7 +182,7 @@ def create_sidebar_html():
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
     transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   }}
   
@@ -140,42 +191,28 @@ def create_sidebar_html():
   }}
   
   .skill-pill:hover {{
-    transform: translateY(-2px) scale(1.05) translateZ(0);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
-    filter: brightness(1.1);
+    transform: translateY(-1px) scale(1.05) translateZ(0);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    filter: brightness(1.1) saturate(1.1);
   }}
   
-  .skill-pill:active {{
-    transform: translateY(-1px) scale(1.02) translateZ(0);
-    transition: all 0.1s cubic-bezier(0.4, 0, 0.2, 1);
-  }}
-  
-  /* Diverse color schemes for pills */
-  .skill-blue {{ background: linear-gradient(135deg, #1e40af, #3730a3); }}
-  .skill-purple {{ background: linear-gradient(135deg, #7c3aed, #5b21b6); }}
-  .skill-green {{ background: linear-gradient(135deg, #059669, #047857); }}
-  .skill-red {{ background: linear-gradient(135deg, #dc2626, #b91c1c); }}
-  .skill-cyan {{ background: linear-gradient(135deg, #0891b2, #0e7490); }}
-  .skill-indigo {{ background: linear-gradient(135deg, #4f46e5, #4338ca); }}
-  .skill-orange {{ background: linear-gradient(135deg, #ea580c, #c2410c); }}
-  .skill-pink {{ background: linear-gradient(135deg, #db2777, #be185d); }}
-  .skill-emerald {{ background: linear-gradient(135deg, #10b981, #059669); }}
-  .skill-violet {{ background: linear-gradient(135deg, #8b5cf6, #7c3aed); }}
-  .skill-rose {{ background: linear-gradient(135deg, #f43f5e, #e11d48); }}
-  .skill-amber {{ background: linear-gradient(135deg, #f59e0b, #d97706); }}
-  .skill-teal {{ background: linear-gradient(135deg, #14b8a6, #0d9488); }}
+  /* Diverse gradient color schemes */
+  .skill-purple {{ background: linear-gradient(135deg, #8b5cf6, #7c3aed); }}
+  .skill-green {{ background: linear-gradient(135deg, #10b981, #059669); }}
+  .skill-orange {{ background: linear-gradient(135deg, #f59e0b, #d97706); }}
+  .skill-pink {{ background: linear-gradient(135deg, #ec4899, #db2777); }}
+  .skill-cyan {{ background: linear-gradient(135deg, #06b6d4, #0891b2); }}
+  .skill-red {{ background: linear-gradient(135deg, #ef4444, #dc2626); }}
+  .skill-emerald {{ background: linear-gradient(135deg, #34d399, #10b981); }}
+  .skill-violet {{ background: linear-gradient(135deg, #a78bfa, #8b5cf6); }}
+  .skill-rose {{ background: linear-gradient(135deg, #fb7185, #f43f5e); }}
+  .skill-amber {{ background: linear-gradient(135deg, #fbbf24, #f59e0b); }}
+  .skill-teal {{ background: linear-gradient(135deg, #2dd4bf, #14b8a6); }}
   .skill-slate {{ background: linear-gradient(135deg, #64748b, #475569); }}
-
-.skill-yellow {{ background: linear-gradient(135deg, #eab308, #ca8a04); }}
-.skill-lime   {{ background: linear-gradient(135deg, #65a30d, #4d7c0f); }}
-.skill-brown  {{ background: linear-gradient(135deg, #92400e, #78350f); }}
-.skill-stone  {{ background: linear-gradient(135deg, #78716c, #57534e); }}
-.skill-zinc   {{ background: linear-gradient(135deg, #71717a, #52525b); }}
-.skill-neutral {{ background: linear-gradient(135deg, #737373, #404040); }}
-.skill-fuchsia {{ background: linear-gradient(135deg, #c026d3, #86198f); }}
-.skill-sky     {{ background: linear-gradient(135deg, #0ea5e9, #0369a1); }}
-.skill-light   {{ background: linear-gradient(135deg, #f3f4f6, #d1d5db); }}
-.skill-dark    {{ background: linear-gradient(135deg, #1f2937, #111827); }}
+  .skill-indigo {{ background: linear-gradient(135deg, #6366f1, #4f46e5); }}
+  .skill-lime {{ background: linear-gradient(135deg, #84cc16, #65a30d); }}
+  .skill-fuchsia {{ background: linear-gradient(135deg, #d946ef, #c026d3); }}
+  .skill-sky {{ background: linear-gradient(135deg, #38bdf8, #0ea5e9); }}
   
   .social-link {{
     display: inline-flex;
@@ -184,17 +221,16 @@ def create_sidebar_html():
     width: 2rem;
     height: 2rem;
     border-radius: 8px;
-    background: #e5e7eb;
-    border: 1px solid #d1d5db;
+    background: rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(148, 163, 184, 0.3);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     text-decoration: none;
+    backdrop-filter: blur(5px);
   }}
   
   .social-link:hover {{
-    background: #d1d5db;
-    border-color: #9ca3af;
-    transform: translateY(-2px) scale(1.05);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px) scale(1.08);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
   }}
   
   .social-linkedin:hover {{ background: #0077b5; border-color: #0077b5; }}
@@ -203,83 +239,89 @@ def create_sidebar_html():
   
   .social-link:hover img {{ filter: brightness(0) invert(1); }}
   
-  /* Compact status indicator */
+  /* Smaller status indicator */
   .status-dot {{
-    width: 6px;
-    height: 6px;
+    width: 4px;
+    height: 4px;
     background: #10b981;
     border-radius: 50%;
     display: inline-block;
     animation: pulse 2s ease-in-out infinite;
-    box-shadow: 0 0 6px rgba(16, 185, 129, 0.5);
+    box-shadow: 0 0 4px rgba(16, 185, 129, 0.5);
   }}
   
   @keyframes pulse {{
     0%, 100% {{ 
       opacity: 1; 
       transform: scale(1);
-      box-shadow: 0 0 6px rgba(16, 185, 129, 0.5);
+      box-shadow: 0 0 4px rgba(16, 185, 129, 0.5);
     }}
     50% {{ 
       opacity: 0.7; 
-      transform: scale(1.1);
-      box-shadow: 0 0 8px rgba(16, 185, 129, 0.8);
+      transform: scale(1.2);
+      box-shadow: 0 0 6px rgba(16, 185, 129, 0.8);
     }}
   }}
   
-  /* Compact typography */
+  /* Enhanced typography */
   .text-primary {{ color: #1f2937; }}
-  .text-secondary {{ color: #4b5563; }}
+  .text-secondary {{ color: #374151; }}
   .section-title {{ 
     color: #1f2937; 
-    font-weight: 600; 
+    font-weight: 700; 
     font-size: 0.75rem; 
     margin-bottom: 0.4rem;
     display: block;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
   }}
     
-  .section-divider {{
-    height: 2px;
-    background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.6), rgba(118, 75, 162, 0.6), rgba(240, 147, 251, 0.6), transparent);
-    margin: 1.2rem 0;
-    border-radius: 1px;
-    position: relative;
-    overflow: hidden;
-  }}
-
-    .section-divider::after {{
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
-    animation: dividerSlide 3s ease-in-out infinite;
-  }}
+.section-divider {{
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(16, 185, 129, 0.9),   /* emerald green */
+    rgba(59, 130, 246, 0.9),   /* vibrant blue */
+    transparent
+  );
+  margin: 0.5rem 0;
+  border-radius: 2px;
+  box-shadow: 0 0 6px rgba(59, 130, 246, 0.4);
+}}
 </style>
 
 <div id="sidebar">
-  <div class="professional-card" style="padding: 0.9rem;">
+  <div class="professional-card" style="padding: 0.7rem;">
     
-    <!-- Compact Profile Header -->
-    <div style="text-align: center; border-bottom: 1px solid #d1d5db; padding-bottom: 0.7rem; margin-bottom: 0.7rem;">
-      <h2 style="margin: 0 0 0.3rem 0; font-size: 1rem; font-weight: 700; color: #1f2937;">Ankit Raj</h2>
-      <div style="display: inline-flex; align-items: center; gap: 0.4rem; background: linear-gradient(135deg, #1e40af, #3730a3); 
-                  color: white; padding: 0.25rem 0.6rem; border-radius: 16px; font-size: 0.7rem; font-weight: 600;">
+    <!-- Avatar -->
+    {avatar_html}
+    
+    <!-- Enhanced Profile Header -->
+    <div style="text-align: center; border-bottom: 1px solid rgba(148, 163, 184, 0.3); 
+                padding-bottom: 0.6rem; margin-bottom: 0.6rem;">
+      <h2 style="margin: 0 0 0.3rem 0; font-size: 1rem; font-weight: 800; color: #1f2937;">Ankit Raj</h2>
+      <div style="display: flex; align-items: center; justify-content: center; gap: 0.4rem; 
+                  background: linear-gradient(135deg, #10b981, #059669); 
+                  color: white; padding: 0.25rem 0.6rem; border-radius: 14px; 
+                  font-size: 0.7rem; font-weight: 700; box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+                  margin: 0 auto; width: fit-content; text-align: center; white-space: nowrap;">
         <span class="status-dot"></span>
-        Senior Architect
+        <div style="display:flex;text-align:center; justify-content:center; align-items:center;">
+  <span style="line-height:1;text-align:center; display:inline-block;">Senior Architect</span>
+</div>
       </div>
-      <p style="margin: 0.3rem 0 0 0; font-size: 0.75rem; color: #4b5563; font-weight: 500;">Cloud & AI Enthusiast</p>
+      
+      <p style="margin: 0.3rem 0 0 0; font-size: 0.75rem; color: #6b7280; font-weight: 600;">Data & AI Enthusiast</p>
     </div>
 
-    <!-- Download Resume Button - Now integrated -->
+    <!-- Download Resume Button with PDF icon -->
     {download_button_html}
 
-    <!-- Compact Connect Section -->
-    <div style="margin-bottom: 0.8rem;">
+    <!-- Enhanced Connect Section -->
+    <div style="margin-bottom: 0.6rem;">
       <span class="section-title">🔗 Connect</span>
-      <div style="display: flex; gap: 0.4rem; justify-content: flex-start;">
+      <div style="display: flex; gap: 0.4rem; justify-content: center;">
         <a href="{LINKEDIN_URL}" target="_blank" title="LinkedIn" class="social-link social-linkedin">
           <img src="https://cdn-icons-png.flaticon.com/512/174/174857.png" 
                alt="LinkedIn" style="width: 14px; height: 14px;">
@@ -295,44 +337,41 @@ def create_sidebar_html():
       </div>
     </div>
 
-    <!-- Compact Key Expertise with diverse colors -->
-     <div class="section-divider"></div>
-    <div style="margin-bottom: 0.8rem;">
+    <!-- Enhanced Key Expertise -->
+    <div class="section-divider"></div>
+    <div style="margin-bottom: 0.6rem;">
       <span class="section-title">⭐ Key Expertise</span>
       <div class="skills-container">
-        <span class="skill-pill skill-blue">Digital Transformation</span>
-        <span class="skill-pill skill-lime">Cloud Modernization</span>
-        <span class="skill-pill skill-purple">Data Engineering</span>
+        <span class="skill-pill skill-purple">Digital Transform</span>
+        <span class="skill-pill skill-lime">Cloud Modern</span>
+        <span class="skill-pill skill-cyan">Data Engineer</span>
         <span class="skill-pill skill-green">Data Governance</span>
-        <span class="skill-pill skill-cyan">Data Fabric</span>
+        <span class="skill-pill skill-orange">Data Fabric</span>
         <span class="skill-pill skill-red">Data Obfuscation</span>
         <span class="skill-pill skill-emerald">API Design</span>
-        <span class="skill-pill skill-violet">Informatica Cloud</span>
-        
+        <span class="skill-pill skill-violet">Informatica</span>
         <span class="skill-pill skill-indigo">Architecture Reviews</span>  
-        <span class="skill-pill skill-orange">Agentic AI</span>
+        <span class="skill-pill skill-amber">Agentic AI</span>
         <span class="skill-pill skill-pink">Chat Bots</span>
-        
-   
         <span class="skill-pill skill-rose">Vector DB</span>
       </div>
     </div>
 
-    <!-- Compact Certifications with unique colors -->
-     <div class="section-divider"></div>
-    <div style="margin-bottom: 0.8rem;">
+    <!-- Enhanced Certifications -->
+    <div class="section-divider"></div>
+    <div style="margin-bottom: 0.6rem;">
       <span class="section-title">🏆 Certifications</span>
       <div class="skills-container">
-        <span class="skill-pill skill-amber">DP-900 Azure Data</span>
-        <span class="skill-pill skill-teal">AI-102 Azure AI Engineer</span>
+        <span class="skill-pill skill-sky">DP-900 Azure</span>
+        <span class="skill-pill skill-fuchsia">AI-102 Azure</span>
         <span class="skill-pill skill-slate">IDMC Champion</span>
       </div>
     </div>
 
-    <!-- Compact Status -->
-    <div style="padding-top: 0.7rem; border-top: 1px solid #d1d5db; text-align: center;">
+    <!-- Enhanced Status -->
+    <div style="padding-top: 0.6rem; border-top: 1px solid rgba(148, 163, 184, 0.3); text-align: center;">
       <div style="display: flex; align-items: center; justify-content: center; gap: 0.4rem; 
-                  font-size: 0.7rem; color: #4b5563; font-weight: 500;">
+                  font-size: 0.7rem; color: #6b7280; font-weight: 600;">
         <span class="status-dot"></span>
         <span>Available for opportunities</span>
       </div>
@@ -340,12 +379,20 @@ def create_sidebar_html():
   </div>
 </div>
 """
-
 # Function to convert resume to base64 for download
 def get_resume_base64():
     import base64
     try:
         with open(RESUME_PATH, "rb") as f:
+            return base64.b64encode(f.read()).decode()
+    except:
+        return ""
+
+# Function to convert avatar to base64
+def get_avatar_base64():
+    import base64
+    try:
+        with open(AVATAR_PATH, "rb") as f:
             return base64.b64encode(f.read()).decode()
     except:
         return ""
@@ -410,17 +457,19 @@ class PersonalAssistant:
 
     def answer_question(self, message: str, history) -> str:
         prompt = f"""
-You are a helpful assistant speaking as Ankit Raj in the first person ('I', 'my'), a seasoned professional with a strong architectural background.
-Your role is to answer questions on my behalf based on my resume, LinkedIn profile, and professional experience.
-Guidelines for Responses:
-Maintain a conversational, approachable, and professional tone.
-Provide accurate and relevant answers strictly from the given context.
-If certain details are not available in the context, politely acknowledge it.
-When relevant, highlight my key achievements, skills, and professional experiences to add depth.
-Keep answers clear, focused, and concise.
-I value integrity and transparency; avoid fabricating information.
-My phone number is +91-8595010310 and my email is raazankeet@gmail.com.
-For resume download requests, guide the user to download my resume.
+You are Ankit Raj, speaking in the first person (“I”, “my”), a seasoned professional with a strong architectural background.
+Your role is to answer career-related questions, recruiter inquiries, and professional introductions on my behalf using my resume, LinkedIn profile, and professional experience.
+Guidelines:
+Maintain a conversational, approachable, and professional tone — concise but warm, never robotic.
+Base answers strictly on my resume and LinkedIn. Prioritize resume first, then LinkedIn, then general professional context.
+If certain details are not covered, avoid saying “I can’t find this in the resume.” Instead, use recruiter-friendly alternatives such as:
+“That detail isn’t included in my resume, but I’d be glad to share more if needed.”
+“That specific point isn’t highlighted in my resume, though my background in [relevant skill/area] closely relates.”
+“That’s not explicitly mentioned in my resume, but I do bring experience in [area].”
+Highlight my key achievements, skills, and professional experiences where relevant.
+My phone number is +91-8595010310 and my email is raazankeet@gmail.com
+. Share these only when contextually appropriate.
+If asked for my resume, guide the user to download it instead of attaching files.
 
 Resume Data:
 {self.profile_data['resume_text']}
@@ -445,7 +494,7 @@ assistant = PersonalAssistant(resume_path=RESUME_PATH, linkedin_url=LINKEDIN_URL
 custom_css = """
 /* Remove top gap only */
 .gradio-container {
-    background: #f1f5f9 !important;
+    background: #f8fafc !important;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
     padding-top: 0.5rem !important;
 }
@@ -458,7 +507,7 @@ footer { visibility: hidden !important; }
     background: #ffffff !important;
     border: 1px solid #e2e8f0 !important;
     border-radius: 12px !important;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08) !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06) !important;
     height: 600px !important;
 }
 
@@ -568,10 +617,10 @@ footer { visibility: hidden !important; }
 
 /* Sidebar styling */
 .gr-column:last-child {
-    background: #f3f4f6 !important;
-    padding: 1.2rem !important;
+    background: #f8fafc !important;
+    padding: 1rem !important;
     border-radius: 12px !important;
-    border-left: 2px solid #d1d5db !important;
+    border-left: 2px solid #e2e8f0 !important;
 }
 
 /* Improved textbox styling */
@@ -596,11 +645,12 @@ footer { visibility: hidden !important; }
     }
     
     .gr-examples .gr-button {
-        font-size: 0.8rem !important;
-        padding: 0.6rem 0.8rem !important;
+        font-size: 0.6rem !important;
+        padding: 0.6rem 0.6rem !important;
     }
 }
 """
+
 
 with gr.Blocks(
     css=custom_css,
@@ -645,9 +695,9 @@ with gr.Blocks(
                 ]
             )
 
-        # Wider sidebar with integrated download button
-        with gr.Column(scale=2, min_width=350):
-            # The download button is now integrated into the HTML
+        # Compact sidebar with avatar and integrated download button
+        with gr.Column(scale=2, min_width=320):
+            # The avatar and download button are now integrated into the HTML
             gr.HTML(create_sidebar_html())
 
 # Launch with enhanced configuration
@@ -668,5 +718,6 @@ if __name__ == "__main__":
         share=False,
         server_name=server_name,
         server_port=port,
-        show_error=True  # This will help with debugging
+        show_error=True , # This will help with debugging
+        favicon_path="static/favicon.png" if os.path.exists("static/favicon.png") else None
     )
