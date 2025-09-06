@@ -15,7 +15,6 @@ GITHUB_URL="https://github.com/raazankeet" # GitHub URL
 EMAIL="raazankeet@gmail.com"               # Email address
 AVATAR_PATH = "static/avatar.png"  # Add your avatar image path here
 
-
 if os.getenv("ENVIRONMENT") != "production":
     from dotenv import load_dotenv
     load_dotenv()
